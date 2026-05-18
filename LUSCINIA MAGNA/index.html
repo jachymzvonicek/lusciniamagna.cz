@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luscinia Magna – Sbor učitelek z Opavy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@300;400;600&family=Cinzel:wght@400;600&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8cc7a;
+    --gold-pale: #f5e9c8;
+    --ink: #12100e;
+    --ink-mid: #2a2420;
+    --ink-soft: #3e3830;
+    --cream: #faf7f2;
+    --warm-white: #f5f0e8;
+    --parchment: #ede5d0;
+    --grey: #8a8078;
+    --grey-light: #bdb5aa;
+    --font-display: 'Cinzel', serif;
+    --font-body: 'Cormorant SC', serif;
+    --font-ui: 'Raleway', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--ink);
+    color: var(--warm-white);
+    overflow-x: hidden;
+  }
+
+  /* ── NAVIGATION ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(18,16,14,0.0);
+    transition: background 0.5s, padding 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(18,16,14,0.94);
+    padding: 0.8rem 3rem;
+    backdrop-filter: blur(8px);
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  nav.scrolled .nav-logo { opacity: 1; }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--warm-white);
+    text-decoration: none;
+    opacity: 0.8;
+    transition: opacity 0.2s, color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 1px; background: var(--gold);
+    transform: scaleX(0); transition: transform 0.3s;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--gold); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+  .nav-burger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
+  .nav-burger span { display: block; width: 24px; height: 1px; background: var(--warm-white); transition: all 0.3s; }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    background: var(--ink);
+  }
+  .hero-photo {
+    position: absolute; inset: 0;
+    background-size: cover;
+    background-position: center 30%;
+    background-repeat: no-repeat;
+    filter: grayscale(100%) sepia(40%) brightness(0.28) contrast(1.1);
+    mix-blend-mode: normal;
+    z-index: 0;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 1;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 30%, rgba(201,168,76,0.09) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 80% at 20% 60%, rgba(201,168,76,0.05) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(201,168,76,0.04) 0%, transparent 60%),
+      linear-gradient(to bottom, rgba(18,16,14,0.55) 0%, rgba(18,16,14,0.2) 40%, rgba(18,16,14,0.7) 100%);
+  }
+  /* Decorative staves (sheet music lines) */
+  .hero-staves {
+    position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 2;
+  }
+  .stave-group {
+    position: absolute;
+    width: 120%;
+    left: -10%;
+  }
+  .stave-group:nth-child(1) { top: 15%; opacity: 0.06; }
+  .stave-group:nth-child(2) { top: 65%; opacity: 0.04; transform: rotate(-1.5deg); }
+  .stave-line {
+    height: 1px; background: var(--gold);
+    margin-bottom: 18px;
+  }
+  /* Musical notes SVG decoration */
+  .hero-notes {
+    position: absolute; right: 8%; top: 50%; transform: translateY(-50%);
+    opacity: 0.07; pointer-events: none;
+    font-size: 12rem; color: var(--gold);
+    line-height: 1;
+    user-select: none; z-index: 2;
+  }
+  .hero-notes-left {
+    position: absolute; left: 5%; top: 30%;
+    opacity: 0.04; pointer-events: none;
+    font-size: 8rem; color: var(--gold);
+    user-select: none; z-index: 2;
+  }
+
+  .hero-content {
+    position: relative; z-index: 3;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    animation: heroReveal 1.8s ease-out both;
+  }
+  @keyframes heroReveal {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-ornament {
+    display: flex; align-items: center; justify-content: center;
+    gap: 1rem; margin-bottom: 2rem;
+  }
+  .ornament-line { width: 80px; height: 1px; background: var(--gold); opacity: 0.6; }
+  .ornament-diamond {
+    width: 7px; height: 7px;
+    background: var(--gold); transform: rotate(45deg);
+  }
+  .hero-eyebrow {
+    font-family: var(--font-ui);
+    font-size: 0.7rem; font-weight: 300;
+    letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--gold-light); margin-bottom: 1.5rem;
+    animation: heroReveal 1.8s 0.2s ease-out both;
+  }
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    font-weight: 400;
+    color: var(--warm-white);
+    letter-spacing: 0.08em;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    animation: heroReveal 1.8s 0.35s ease-out both;
+  }
+  .hero-title span { color: var(--gold); }
+  .hero-subtitle {
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--grey-light);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+    animation: heroReveal 1.8s 0.5s ease-out both;
+  }
+  .hero-location {
+    font-family: var(--font-ui);
+    font-size: 0.7rem; font-weight: 300;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--grey);
+    margin-bottom: 3.5rem;
+    animation: heroReveal 1.8s 0.65s ease-out both;
+  }
+  .hero-cta {
+    display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap;
+    animation: heroReveal 1.8s 0.8s ease-out both;
+  }
+  .btn {
+    font-family: var(--font-ui);
+    font-size: 0.7rem; font-weight: 500;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.9rem 2.2rem;
+    border: 1px solid;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: var(--gold); color: var(--ink);
+    border-color: var(--gold);
+  }
+  .btn-primary:hover { background: var(--gold-light); border-color: var(--gold-light); }
+  .btn-outline {
+    background: transparent; color: var(--warm-white);
+    border-color: rgba(255,255,255,0.25);
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+  .hero-scroll {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+    animation: heroReveal 1.8s 1.2s ease-out both; z-index: 3;
+  }
+  .hero-scroll span {
+    font-family: var(--font-ui);
+    font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--grey);
+  }
+  .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s infinite;
+  }
+  @keyframes scrollPulse {
+    0%,100% { opacity: 0.4; } 50% { opacity: 1; }
+  }
+
+  /* ── SECTIONS GENERAL ── */
+  section { padding: 7rem 2rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .section-tag {
+    font-family: var(--font-ui);
+    font-size: 0.65rem; font-weight: 400;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .section-tag::before {
+    content: ''; display: block;
+    width: 30px; height: 1px; background: var(--gold);
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 400; letter-spacing: 0.04em;
+    line-height: 1.2; margin-bottom: 1.5rem;
+    color: var(--warm-white);
+  }
+  .section-body {
+    font-family: var(--font-body);
+    font-size: 1.15rem; font-weight: 300; line-height: 1.9;
+    color: var(--grey-light); max-width: 680px;
+  }
+
+  /* ── O SBORU ── */
+  #o-sboru { background: var(--ink-mid); }
+  .about-grid {
+    display: block;
+  }
+  .about-left { position: relative; }
+  #o-sboru .section-body { max-width: none; }
+  #o-sboru .about-quote { max-width: none; }
+  .about-left::before {
+    content: '"';
+    font-family: var(--font-display);
+    font-size: 18rem; line-height: 0.7;
+    color: var(--gold); opacity: 0.08;
+    position: absolute; top: -1rem; left: -2rem;
+    pointer-events: none; user-select: none;
+  }
+  .about-quote {
+    font-family: var(--font-body);
+    font-size: 1.4rem; font-style: italic; font-weight: 300;
+    line-height: 1.7; color: var(--grey-light);
+    border-left: 2px solid var(--gold);
+    padding-left: 1.8rem;
+    margin: 2.5rem 0;
+  }
+  .about-right { padding-top: 1rem; }
+  .about-facts {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1.5rem; margin-top: 2.5rem;
+  }
+  .fact-item {
+    padding: 1.4rem;
+    border: 1px solid rgba(201,168,76,0.2);
+    background: rgba(255,255,255,0.03);
+  }
+  .fact-label {
+    font-family: var(--font-ui);
+    font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.4rem;
+  }
+  .fact-value {
+    font-family: var(--font-body);
+    font-size: 1rem; color: var(--warm-white);
+  }
+
+  /* ── KONCERTY ── */
+  #koncerty { background: var(--ink-mid); }
+  .concerts-layout {
+    display: grid; grid-template-columns: 1fr 1.6fr;
+    gap: 5rem; align-items: start; margin-top: 1.5rem;
+  }
+  .concerts-intro .section-body { margin-top: 1rem; }
+  .concert-list { display: flex; flex-direction: column; gap: 0; }
+  .concert-item {
+    display: grid; grid-template-columns: 80px 1fr;
+    gap: 1.5rem; align-items: start;
+    padding: 1.8rem 0;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    position: relative;
+    transition: padding-left 0.3s;
+    cursor: default;
+  }
+  .concert-item:first-child { border-top: 1px solid rgba(201,168,76,0.15); }
+  .concert-item:hover { padding-left: 0.5rem; }
+  .concert-date-box {
+    text-align: center;
+    padding: 0.8rem 0.5rem;
+    border: 1px solid var(--gold);
+    background: transparent;
+    transition: background 0.3s;
+  }
+  .concert-item:hover .concert-date-box { background: var(--gold); }
+  .concert-item:hover .concert-date-box .cdate-month { color: var(--ink); }
+  .concert-item:hover .concert-date-box .cdate-day { color: var(--ink); }
+  .cdate-month {
+    font-family: var(--font-ui);
+    font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); display: block;
+    transition: color 0.3s;
+  }
+  .cdate-day {
+    font-family: var(--font-display);
+    font-size: 1.8rem; font-weight: 600;
+    color: var(--gold); line-height: 1;
+    transition: color 0.3s;
+  }
+  .concert-info {}
+  .concert-title {
+    font-family: var(--font-body);
+    font-size: 1.2rem; font-weight: 600;
+    color: var(--warm-white); margin-bottom: 0.3rem;
+  }
+  .concert-venue {
+    font-family: var(--font-ui);
+    font-size: 0.7rem; letter-spacing: 0.1em;
+    color: var(--gold); text-transform: uppercase;
+  }
+  .concert-desc {
+    font-family: var(--font-body);
+    font-size: 0.95rem; font-weight: 300; line-height: 1.65;
+    color: var(--grey-light); margin-top: 0.5rem;
+  }
+  .concerts-note {
+    margin-top: 2rem;
+    font-family: var(--font-body); font-size: 0.95rem;
+    font-style: italic; color: var(--grey-light);
+  }
+
+  /* ── SBORMISTR STRIP ── */
+  #sbormistr {
+    background: var(--ink-mid);
+    padding: 5rem 2rem;
+  }
+  .sbormistr-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: center;
+  }
+  .sbormistr-monogram {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    flex-shrink: 0;
+    overflow: hidden;
+    border: 1px solid rgba(201,168,76,0.3);
+  }
+  .sbormistr-monogram img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    display: block;
+    filter: sepia(15%) brightness(0.92);
+    transition: filter 0.4s;
+  }
+  .sbormistr-monogram:hover img { filter: sepia(0%) brightness(1); }
+  .sbormistr-tag {
+    font-family: var(--font-ui);
+    font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.5rem;
+  }
+  .sbormistr-name {
+    font-family: var(--font-display);
+    font-size: 2rem; color: var(--warm-white);
+    margin-bottom: 0.8rem; font-weight: 400; letter-spacing: 0.06em;
+  }
+  .sbormistr-desc {
+    font-family: var(--font-body);
+    font-size: 1.05rem; font-weight: 300; line-height: 1.8;
+    color: var(--grey-light);
+  }
+
+  /* ── GALERIE ── */
+  #galerie { background: var(--ink); }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 300px 300px 260px;
+    gap: 0.5rem;
+    margin-top: 3.5rem;
+  }
+  /* Layout:
+     LM2 (landscape) : col 1-2, row 1
+     LM4 (portrait)  : col 3,   rows 1-2
+     LM1 (landscape) : col 1-2, row 2
+     LM5 (landscape) : col 1,   row 3
+     LM3 (landscape) : col 2,   row 3
+     LM6 (landscape) : col 3,   row 3
+  */
+  .gi-lm2 { grid-column: 1 / 3; grid-row: 1; }
+  .gi-lm4 { grid-column: 3;     grid-row: 1 / 3; }
+  .gi-lm1 { grid-column: 1 / 3; grid-row: 2; }
+  .gi-lm5 { grid-column: 1;     grid-row: 3; }
+  .gi-lm3 { grid-column: 2;     grid-row: 3; }
+  .gi-lm6 { grid-column: 3;     grid-row: 3; }
+
+  .gallery-item {
+    background: var(--ink-mid);
+    position: relative; overflow: hidden;
+    cursor: pointer;
+  }
+  .gallery-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease, filter 0.4s;
+    filter: brightness(0.88);
+  }
+  .gallery-item:hover img {
+    transform: scale(1.04);
+    filter: brightness(1.05);
+  }
+  .gallery-overlay {
+    position: absolute; inset: 0;
+    border: 1px solid rgba(201,168,76,0.08);
+    pointer-events: none;
+    transition: border-color 0.35s;
+  }
+  .gallery-item:hover .gallery-overlay { border-color: rgba(201,168,76,0.55); }
+
+  /* ── LIGHTBOX ── */
+  .lightbox {
+    display: none;
+    position: fixed; inset: 0; z-index: 999;
+    background: rgba(12,10,8,0.96);
+    align-items: center; justify-content: center;
+    padding: 2rem;
+    animation: lbFadeIn 0.25s ease;
+  }
+  .lightbox.open { display: flex; }
+  @keyframes lbFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .lightbox img {
+    max-width: 92vw; max-height: 90vh;
+    object-fit: contain;
+    box-shadow: 0 0 60px rgba(0,0,0,0.8);
+    animation: lbScale 0.3s ease;
+  }
+  @keyframes lbScale { from { transform: scale(0.94); } to { transform: scale(1); } }
+  .lb-close {
+    position: fixed; top: 1.5rem; right: 2rem;
+    font-size: 2rem; color: var(--gold); cursor: pointer;
+    line-height: 1; opacity: 0.7; transition: opacity 0.2s;
+    font-family: var(--font-ui); font-weight: 300;
+    z-index: 1000;
+  }
+  .lb-close:hover { opacity: 1; }
+  .lb-prev, .lb-next {
+    position: fixed; top: 50%; transform: translateY(-50%);
+    font-family: var(--font-ui); font-size: 1.8rem;
+    color: var(--gold); cursor: pointer;
+    opacity: 0.5; transition: opacity 0.2s;
+    z-index: 1000; padding: 1rem;
+    user-select: none;
+  }
+  .lb-prev:hover, .lb-next:hover { opacity: 1; }
+  .lb-prev { left: 1rem; }
+  .lb-next { right: 1rem; }
+  .lb-counter {
+    position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+    font-family: var(--font-ui); font-size: 0.65rem;
+    letter-spacing: 0.2em; color: var(--grey-light);
+    z-index: 1000;
+  }
+
+  /* ── KONTAKT ── */
+  #kontakt { background: var(--ink); }
+  #kontakt .section-title { color: var(--warm-white); }
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 5rem; margin-top: 4rem;
+  }
+  .contact-block { }
+  .contact-label {
+    font-family: var(--font-ui);
+    font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.8rem;
+  }
+  .contact-value {
+    font-family: var(--font-body);
+    font-size: 1.3rem; font-weight: 300;
+    color: var(--warm-white); line-height: 1.6;
+  }
+  .contact-value a {
+    color: var(--warm-white); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .contact-value a:hover { color: var(--gold); }
+  .contact-social {
+    display: flex; gap: 1.2rem; margin-top: 0.8rem;
+  }
+  .social-link {
+    font-family: var(--font-ui);
+    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--grey-light); text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 0.6rem 1.2rem;
+    transition: all 0.3s;
+  }
+  .social-link:hover { border-color: var(--gold); color: var(--gold); }
+  .contact-divider {
+    width: 100%; height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 3rem 0;
+  }
+  .contact-join {
+    grid-column: 1 / -1;
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 2.5rem 3rem;
+    display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .join-text {
+    font-family: var(--font-body);
+    font-size: 1.4rem; font-style: italic; font-weight: 300;
+    color: var(--warm-white); max-width: 500px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 2.5rem 2rem;
+    text-align: center;
+  }
+  .footer-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-name {
+    font-family: var(--font-display);
+    font-size: 0.9rem; letter-spacing: 0.15em;
+    color: var(--gold);
+  }
+  .footer-copy {
+    font-family: var(--font-ui);
+    font-size: 0.65rem; letter-spacing: 0.12em;
+    color: var(--grey); opacity: 0.55; text-transform: uppercase;
+  }
+  .footer-credit {
+    font-family: var(--font-ui);
+    font-size: 0.65rem; letter-spacing: 0.18em;
+    color: var(--grey); opacity: 0.5; text-transform: uppercase;
+    text-align: center; flex: 1;
+  }
+  .footer-ornament {
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .fo-line { width: 40px; height: 1px; background: var(--gold); opacity: 0.3; }
+  .fo-d { width: 4px; height: 4px; background: var(--gold); transform: rotate(45deg); opacity: 0.5; }
+
+  /* ── REVEAL ANIMATION ── */
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    nav.scrolled { padding: 0.7rem 1.5rem; }
+    .nav-links { display: none; flex-direction: column; position: fixed; inset: 0; background: rgba(18,16,14,0.97); align-items: center; justify-content: center; gap: 2.5rem; }
+    .nav-links.open { display: flex; }
+    .nav-links a { font-size: 1rem; }
+    .nav-burger { display: flex; }
+
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .about-facts { grid-template-columns: 1fr 1fr; }
+    .concerts-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+    .sbormistr-inner { grid-template-columns: 1fr; text-align: center; }
+    .sbormistr-monogram { margin: 0 auto; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: 220px 220px 220px 220px; }
+    .gi-lm2 { grid-column: 1 / 3; grid-row: 1; } .gi-lm4 { grid-column: 1; grid-row: 2 / 4; } .gi-lm1 { grid-column: 2; grid-row: 2; } .gi-lm5 { grid-column: 2; grid-row: 3; } .gi-lm3 { grid-column: 1; grid-row: 4; } .gi-lm6 { grid-column: 2; grid-row: 4; }
+    .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .contact-join { flex-direction: column; text-align: center; }
+    section { padding: 5rem 1.5rem; }
+  }
+
+  @media (max-width: 600px) {
+    .about-facts { grid-template-columns: 1fr; }
+    .gallery-grid { grid-template-columns: 1fr; grid-template-rows: 220px 320px 220px 220px 220px 220px; }
+    .gi-lm2,.gi-lm4,.gi-lm1,.gi-lm5,.gi-lm3,.gi-lm6 { grid-column: 1; grid-row: auto; }
+    .footer-inner { flex-direction: column; text-align: center; }
+    .hero-cta { flex-direction: column; align-items: center; }
+    .repertoire-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">Luscinia Magna</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#o-sboru" onclick="closeNav()">O sboru</a></li>
+    <li><a href="#koncerty" onclick="closeNav()">Koncerty</a></li>
+    <li><a href="#galerie" onclick="closeNav()">Galerie</a></li>
+    <li><a href="#kontakt" onclick="closeNav()">Kontakt</a></li>
+  </ul>
+  <div class="nav-burger" id="navBurger" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-photo" id="heroBg"></div>
+  <div class="hero-bg"></div>
+  <div class="hero-staves">
+    <div class="stave-group">
+      <div class="stave-line"></div><div class="stave-line"></div>
+      <div class="stave-line"></div><div class="stave-line"></div><div class="stave-line"></div>
+    </div>
+    <div class="stave-group">
+      <div class="stave-line"></div><div class="stave-line"></div>
+      <div class="stave-line"></div><div class="stave-line"></div><div class="stave-line"></div>
+    </div>
+  </div>
+  <div class="hero-notes-left">♩</div>
+  <div class="hero-notes">𝄞</div>
+
+  <div class="hero-content">
+    <h1 class="hero-title">Luscinia <span>Magna </span></h1>
+    <p class="hero-subtitle">Smíšený pěvecký sbor</p>
+    <p class="hero-location">Est. 2022</p>
+    <div class="hero-ornament">
+      <div class="ornament-line"></div>
+      <div class="ornament-diamond"></div>
+      <div class="ornament-line"></div>
+    </div>
+    <div class="hero-cta">
+      <a href="#o-sboru" class="btn btn-primary">O sboru</a>
+      <a href="#koncerty" class="btn btn-outline">Koncerty</a>
+      <a href="#kontakt" class="btn btn-outline">Kontakt</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span>Dolů</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- O SBORU -->
+<section id="o-sboru">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-left">
+        <div class="section-tag reveal">O sboru</div>
+        <h2 class="section-title reveal reveal-delay-1">Tradice, hlas<br>a společenství</h2>
+        <blockquote class="about-quote reveal reveal-delay-2">
+          Zpěv je nejčistší formou lidského výrazu – přímá cesta od srdce k srdci.
+        </blockquote>
+        <p class="section-body reveal reveal-delay-3">
+          Luscinia Magna je smíšený pěvecký sbor s kořeny hluboko v opavské sborové tradici. Vznikl spojením dvou významných těles – Pěveckého sdružení slezských učitelek (1958) a středoškolského sboru Luscinia. Toto propojení přineslo jedinečnou syntézu: pedagogickou zkušenost a uměleckou vitalitu.
+        </p>
+        <p class="section-body reveal reveal-delay-4" style="margin-top: 1rem;">
+          Sbor se věnuje širokému spektru sborové literatury – od renesanční polyfonie přes duchovní hudbu barokní až po soudobou tvorbu a lidové písně v uměleckých úpravách. Každý koncert je pečlivě připravenou uměleckou výpovědí.
+        </p>
+      </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- KONCERTY -->
+<section id="koncerty">
+  <div class="container">
+    <div class="concerts-layout">
+      <div class="concerts-intro">
+        <div class="section-tag reveal">Koncerty</div>
+        <h2 class="section-title reveal reveal-delay-1">Kde nás uslyšíte</h2>
+        <p class="section-body reveal reveal-delay-2">
+          Sbor vystupuje v kostelích, koncertních síních i na otevřených pódiích v celém Moravskoslezském kraji. Každé vystoupení je pečlivě připravenou uměleckou událostí.
+        </p>
+        <p class="concerts-note reveal reveal-delay-3">
+          Aktuální program koncertů sledujte na našich sociálních sítích.
+        </p>
+      </div>
+      <div class="concert-list">
+        <div class="concert-item reveal">
+          <div class="concert-date-box">
+            <span class="cdate-month">Prosinec</span>
+            <span class="cdate-day">14</span>
+          </div>
+          <div class="concert-info">
+            <div class="concert-title">Adventní koncert</div>
+            <div class="concert-venue">Kostel sv. Vojtěcha · Opava</div>
+            <p class="concert-desc">Tradiční adventní program s duchovní a vánočními skladbami. Svátečná atmosféra v historickém prostoru.</p>
+          </div>
+        </div>
+        <div class="concert-item reveal reveal-delay-1">
+          <div class="concert-date-box">
+            <span class="cdate-month">Říjen</span>
+            <span class="cdate-day">5</span>
+          </div>
+          <div class="concert-info">
+            <div class="concert-title">Společný koncert s PSSÚ</div>
+            <div class="concert-venue">Dům kultury · Opava</div>
+            <p class="concert-desc">Jubilejní společný večer s Pěveckým sdružením slezských učitelek – setkání dvou sborových generací.</p>
+          </div>
+        </div>
+        <div class="concert-item reveal reveal-delay-2">
+          <div class="concert-date-box">
+            <span class="cdate-month">Květen</span>
+            <span class="cdate-day">23</span>
+          </div>
+          <div class="concert-info">
+            <div class="concert-title">Sborový festival Slezská píseň</div>
+            <div class="concert-venue">Hláska · Opava</div>
+            <p class="concert-desc">Regionální přehlídka sborového zpěvu s účastí souborů z celého kraje.</p>
+          </div>
+        </div>
+        <div class="concert-item reveal reveal-delay-3">
+          <div class="concert-date-box">
+            <span class="cdate-month">Březen</span>
+            <span class="cdate-day">8</span>
+          </div>
+          <div class="concert-info">
+            <div class="concert-title">Jarní koncert</div>
+            <div class="concert-venue">Minoritský klášter · Opava</div>
+            <p class="concert-desc">Programový večer s renesančními a barokními díly doplněný soudobými sborovými skladbami.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SBORMISTR -->
+<section id="sbormistr">
+  <div class="sbormistr-inner">
+    <div class="sbormistr-monogram reveal">
+      <img src="images/slovik.jpg" alt="Jiří Slovík">
+    </div>
+    <div class="reveal reveal-delay-1">
+      <div class="sbormistr-tag">Sbormistr</div>
+      <div class="sbormistr-name">Jiří Slovík</div>
+      <p class="sbormistr-desc">
+        Jiří Slovík (1956) vystudoval gymnázium v Karviné, je absolvent FF Ostravské univerzity obor český jazyk a hudební výchova. Sbormistrovskou činnost začal pod vedením Lumíra Pivovarského. Po absolutoriu pracoval jako pedagog na ZŠ v Ostravě, od roku 1989 na Pedagogické škole v Krnově, kde založil a vedl sbor Ventus Krnov, v Opavě pak dětský sbor Červený květ. Na Janáčkově konzervatoři v Ostravě kromě výuky intonace a sbormistrovství působil i jako sbormistr školního sboru a také sboru KomoraCzech. Při všech těchto aktivitách založil na Mendelově gymnáziu v roce 1996 smíšený pěvecký sbor OSS Luscinia. V současné době je sbormistrem Pěveckého sdružení opavských učitelek a pěveckého sboru Luscinia Magna, který je nástupcem středoškolského zpívání. V roce 1997 zakládá spolu s realizačním týmem Mendelova gymnázia mezinárodní sborový festival Opava cantat, který přerostl v celostátní soutěž. Od roku 2012 pracoval tři roky jako sbormistr ve Sborovém studiu Wolfenbüttel (NSR). V roce 2014 založil sbor Con moto Slowakia, v němž zpívají hlavně slovenští sbormistři. Se všemi sbory vystupoval a soutěžil v Evropě, Turecku i USA.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- GALERIE -->
+<section id="galerie">
+  <div class="container">
+    <div class="section-tag reveal">Galerie</div>
+    <h2 class="section-title reveal reveal-delay-1">Ze zákulisí i pódia</h2>
+    <p class="section-body reveal reveal-delay-2">Fotografie ze zkoušek, koncertů a festivalů – svědectví o životě sboru.</p>
+    <div class="gallery-grid">
+      <div class="gallery-item gi-lm2 reveal" onclick="openLightbox(1)">
+        <img src="images/gallery-2.jpg" alt="Sbor při vystoupení" loading="lazy">
+        <div class="gallery-overlay"></div>
+      </div>
+      <div class="gallery-item gi-lm4 reveal reveal-delay-1" onclick="openLightbox(3)">
+        <img src="images/gallery-4.jpg" alt="Praga Cantat – portrét" loading="lazy">
+        <div class="gallery-overlay"></div>
+      </div>
+      <div class="gallery-item gi-lm1 reveal reveal-delay-2" onclick="openLightbox(0)">
+        <img src="images/gallery-1.jpg" alt="Sbormistr při zkoušce" loading="lazy">
+        <div class="gallery-overlay"></div>
+      </div>
+      <div class="gallery-item gi-lm5 reveal reveal-delay-1" onclick="openLightbox(4)">
+        <img src="images/gallery-5.jpg" alt="Praga Cantat – koncert" loading="lazy">
+        <div class="gallery-overlay"></div>
+      </div>
+      <div class="gallery-item gi-lm3 reveal reveal-delay-2" onclick="openLightbox(2)">
+        <img src="images/gallery-3.jpg" alt="Praga Cantat – skupinová" loading="lazy">
+        <div class="gallery-overlay"></div>
+      </div>
+      <div class="gallery-item gi-lm6 reveal reveal-delay-3" onclick="openLightbox(5)">
+        <img src="images/gallery-6.jpg" alt="Diplom Praga Cantat 2024" loading="lazy">
+        <div class="gallery-overlay"></div>
+      </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightboxOutside(event)">
+      <span class="lb-close" onclick="closeLightbox()">&#x2715;</span>
+      <span class="lb-prev" onclick="lbNav(-1)">&#8592;</span>
+      <img id="lbImg" src="" alt="">
+      <span class="lb-next" onclick="lbNav(1)">&#8594;</span>
+      <div class="lb-counter" id="lbCounter"></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- KONTAKT -->
+<section id="kontakt">
+<div class="container">
+    <div class="section-tag reveal" style="color: var(--gold);">Kontakt</div>
+    <div class="contact-grid">
+      <div class="contact-block reveal reveal-delay-1">
+        <div class="contact-label">Sociální sítě</div>
+        <div class="contact-social">
+<a href="https://www.facebook.com/p/Luscinia-Magna-61569302033475/" target="_blank" rel="noopener" class="social-link">Facebook</a>
+      <div class="contact-block reveal reveal-delay-4">
+      </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="margin-top: 5rem;">
+  <div class="footer-inner">
+
+    <div class="footer-name">Luscinia Magna</div>
+
+    <div class="footer-credit">Web by Killswitch</div>
+
+    <div class="footer-copy">© 2025 · Sbor učitelek z Opavy · Všechna práva vyhrazena</div>
+
+  </div>
+</footer>
+
+<script>
+  // Hero background image (base64 embedded)
+  const heroBg = document.getElementById('heroBg');
+  if (heroBg) {
+    heroBg.style.backgroundImage = "url('images/gallery-5.jpg')";
+  }
+
+  // Nav scroll effect
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Mobile nav
+  function toggleNav() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+  function closeNav() {
+    document.getElementById('navLinks').classList.remove('open');
+  }
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Lightbox
+  const lbImages = Array.from(document.querySelectorAll('.gallery-item img')).map(img => img.src);
+  let lbCurrent = 0;
+  const lightbox = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbCounter = document.getElementById('lbCounter');
+
+  function openLightbox(idx) {
+    lbCurrent = idx;
+    lbImg.src = lbImages[idx];
+    lbCounter.textContent = (idx + 1) + ' / ' + lbImages.length;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function closeLightboxOutside(e) {
+    if (e.target === lightbox) closeLightbox();
+  }
+  function lbNav(dir) {
+    lbCurrent = (lbCurrent + dir + lbImages.length) % lbImages.length;
+    lbImg.src = lbImages[lbCurrent];
+    lbCounter.textContent = (lbCurrent + 1) + ' / ' + lbImages.length;
+  }
+  document.addEventListener('keydown', e => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') lbNav(1);
+    if (e.key === 'ArrowLeft') lbNav(-1);
+  });
+</script>
+</body>
+</html>
