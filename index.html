@@ -411,53 +411,54 @@
     color: var(--grey-light);
   }
 
-  /* ── GALERIE ── */
-  #galerie { background: var(--ink); }
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 300px 300px 260px;
-    gap: 0.5rem;
-    margin-top: 3.5rem;
-  }
-  /* Layout:
-     LM2 (landscape) : col 1-2, row 1
-     LM4 (portrait)  : col 3,   rows 1-2
-     LM1 (landscape) : col 1-2, row 2
-     LM5 (landscape) : col 1,   row 3
-     LM3 (landscape) : col 2,   row 3
-     LM6 (landscape) : col 3,   row 3
-  */
-  .gi-lm2 { grid-column: 1 / 3; grid-row: 1; }
-  .gi-lm4 { grid-column: 3;     grid-row: 1 / 3; }
-  .gi-lm1 { grid-column: 1 / 3; grid-row: 2; }
-  .gi-lm5 { grid-column: 1;     grid-row: 3; }
-  .gi-lm3 { grid-column: 2;     grid-row: 3; }
-  .gi-lm6 { grid-column: 3;     grid-row: 3; }
+ /* ── GALERIE ── */
+#galerie { background: var(--ink); }
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 300px 300px 260px 300px 300px 260px;
+  gap: 0.5rem;
+  margin-top: 3.5rem;
+}
 
-  .gallery-item {
-    background: var(--ink-mid);
-    position: relative; overflow: hidden;
-    cursor: pointer;
-  }
-  .gallery-item img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.6s ease, filter 0.4s;
-    filter: brightness(0.88);
-  }
-  .gallery-item:hover img {
-    transform: scale(1.04);
-    filter: brightness(1.05);
-  }
-  .gallery-overlay {
-    position: absolute; inset: 0;
-    border: 1px solid rgba(201,168,76,0.08);
-    pointer-events: none;
-    transition: border-color 0.35s;
-  }
-  .gallery-item:hover .gallery-overlay { border-color: rgba(201,168,76,0.55); }
+/* Původní 6 fotek */
+.gi-lm1 { grid-column: 1 / 3; grid-row: 1; }
+.gi-lm2 { grid-column: 1 / 3; grid-row: 2; }
+.gi-lm3 { grid-column: 2;     grid-row: 3; }
+.gi-lm4 { grid-column: 3;     grid-row: 1 / 3; }
+.gi-lm5 { grid-column: 1;     grid-row: 3; }
+.gi-lm6 { grid-column: 3;     grid-row: 3; }
+
+/* Nové SD fotky — řady 4–6 */
+.gi-sd1 { grid-column: 1 / 3; grid-row: 4; }
+.gi-sd2 { grid-column: 3;     grid-row: 4 / 6; }
+.gi-sd3 { grid-column: 1 / 3; grid-row: 5; }
+.gi-sd4 { grid-column: 1;     grid-row: 6; }
+.gi-sd5 { grid-column: 2 / 4; grid-row: 6; }
+
+.gallery-item {
+  background: var(--ink-mid);
+  position: relative; overflow: hidden;
+  cursor: pointer;
+}
+.gallery-item img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease, filter 0.4s;
+  filter: brightness(0.88);
+}
+.gallery-item:hover img {
+  transform: scale(1.04);
+  filter: brightness(1.05);
+}
+.gallery-overlay {
+  position: absolute; inset: 0;
+  border: 1px solid rgba(201,168,76,0.08);
+  pointer-events: none;
+  transition: border-color 0.35s;
+}
+.gallery-item:hover .gallery-overlay { border-color: rgba(201,168,76,0.55); }
 
   /* ── LIGHTBOX ── */
   .lightbox {
@@ -732,8 +733,7 @@ Přijď se podívat na naši zkoušku nebo nás kontaktuj – rádi tě uvidíme
         <div class="section-tag reveal">Koncerty</div>
         <h2 class="section-title reveal reveal-delay-1">Kde nás uslyšíte</h2>
         <p class="section-body reveal reveal-delay-2">
-          Sbor vystupuje v kostelích, koncertních síních i na otevřených pódiích v celém Moravskoslezském kraji. Každé vystoupení je pečlivě připravenou uměleckou událostí.
-        </p>
+          Sbor vystupuje v kostelích, koncertních síních i při příležitosti různých událostí po celé České republice i v zahraničí.
         <p class="concerts-note reveal reveal-delay-3">
           Aktuální program koncertů sledujte na našich sociálních sítích.
         </p>
@@ -827,23 +827,25 @@ Přijď se podívat na naši zkoušku nebo nás kontaktuj – rádi tě uvidíme
     <h2 class="section-title reveal reveal-delay-1">Ze zákulisí i pódia</h2>
     <p class="section-body reveal reveal-delay-2">Fotografie ze zkoušek, koncertů a festivalů – svědectví o životě sboru.</p>
     <div class="gallery-grid">
-      <div class="gallery-item gi-lm2 reveal" onclick="openLightbox(1)">
+
+      <!-- Původní fotky -->
+      <div class="gallery-item gi-lm2 reveal" onclick="openLightbox(0)">
         <img src="images/gallery-2.jpg" alt="Sbor při vystoupení" loading="lazy">
         <div class="gallery-overlay"></div>
       </div>
-      <div class="gallery-item gi-lm4 reveal reveal-delay-1" onclick="openLightbox(3)">
+      <div class="gallery-item gi-lm4 reveal reveal-delay-1" onclick="openLightbox(1)">
         <img src="images/gallery-4.jpg" alt="Praga Cantat – portrét" loading="lazy">
         <div class="gallery-overlay"></div>
       </div>
-      <div class="gallery-item gi-lm1 reveal reveal-delay-2" onclick="openLightbox(0)">
+      <div class="gallery-item gi-lm1 reveal reveal-delay-2" onclick="openLightbox(2)">
         <img src="images/gallery-1.jpg" alt="Sbormistr při zkoušce" loading="lazy">
         <div class="gallery-overlay"></div>
       </div>
-      <div class="gallery-item gi-lm5 reveal reveal-delay-1" onclick="openLightbox(4)">
+      <div class="gallery-item gi-lm5 reveal reveal-delay-1" onclick="openLightbox(3)">
         <img src="images/gallery-5.jpg" alt="Praga Cantat – koncert" loading="lazy">
         <div class="gallery-overlay"></div>
       </div>
-      <div class="gallery-item gi-lm3 reveal reveal-delay-2" onclick="openLightbox(2)">
+      <div class="gallery-item gi-lm3 reveal reveal-delay-2" onclick="openLightbox(4)">
         <img src="images/gallery-3.jpg" alt="Praga Cantat – skupinová" loading="lazy">
         <div class="gallery-overlay"></div>
       </div>
@@ -851,6 +853,29 @@ Přijď se podívat na naši zkoušku nebo nás kontaktuj – rádi tě uvidíme
         <img src="images/gallery-6.jpg" alt="Diplom Praga Cantat 2024" loading="lazy">
         <div class="gallery-overlay"></div>
       </div>
+
+      <!-- Nové SD fotky -->
+      <div class="gallery-item gi-sd1 reveal reveal-delay-1" onclick="openLightbox(6)">
+        <img src="images/SD1.jpeg" alt="Publikum na koncertě" loading="lazy">
+        <div class="gallery-overlay"></div>
+      </div>
+      <div class="gallery-item gi-sd2 reveal reveal-delay-2" onclick="openLightbox(7)">
+        <img src="images/SD2.jpeg" alt="Předání kytice sbormistrovi" loading="lazy">
+        <div class="gallery-overlay"></div>
+      </div>
+      <div class="gallery-item gi-sd3 reveal reveal-delay-3" onclick="openLightbox(8)">
+        <img src="images/SD3.jpeg" alt="Sbor při vystoupení" loading="lazy">
+        <div class="gallery-overlay"></div>
+      </div>
+      <div class="gallery-item gi-sd4 reveal reveal-delay-1" onclick="openLightbox(9)">
+        <img src="images/SD4.jpeg" alt="Sbormistr při dirigování" loading="lazy">
+        <div class="gallery-overlay"></div>
+      </div>
+      <div class="gallery-item gi-sd5 reveal reveal-delay-2" onclick="openLightbox(10)">
+        <img src="images/SD5.jpeg" alt="Pohled na plný kostel" loading="lazy">
+        <div class="gallery-overlay"></div>
+      </div>
+
     </div>
 
     <!-- Lightbox -->
@@ -860,33 +885,6 @@ Přijď se podívat na naši zkoušku nebo nás kontaktuj – rádi tě uvidíme
       <img id="lbImg" src="" alt="">
       <span class="lb-next" onclick="lbNav(1)">&#8594;</span>
       <div class="lb-counter" id="lbCounter"></div>
-    </div>
-  </div>
-
-</section>
-
-<!-- KONTAKT -->
-<section id="kontakt">
-<div class="container">
-    <div class="section-tag reveal" style="color: var(--gold);">Kontakt</div>
-    <div class="contact-grid">
-      <div class="contact-block reveal reveal-delay-1">
-        <div class="contact-label">Sociální sítě</div>
-        <div class="contact-social">
-          <a href="https://www.facebook.com/p/Luscinia-Magna-61569302033475/" target="_blank" rel="noopener" class="social-link">Facebook</a>
-        </div>
-      </div>
-
-      <div class="contact-block reveal reveal-delay-2">
-        <div class="contact-label">Telefon</div>
-        <a href="tel:+420607112383" class="contact-link">+420 607 112 383</a>
-      </div>
-
-      <div class="contact-block reveal reveal-delay-3">
-        <div class="contact-label">E-mail</div>
-        <a href="mailto:lusciniamagnaopava@gmail.com" class="contact-link">lusciniamagnaopava@gmail.com</a>
-      </div>
-
     </div>
   </div>
 </section>
