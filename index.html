@@ -510,6 +510,9 @@
     display: grid; grid-template-columns: 1fr 1fr;
     gap: 5rem; margin-top: 4rem;
   }
+.contact-link {
+  color: var(--gold); /* nebo jakákoli barva */
+}
   .contact-block { }
   .contact-label {
     font-family: var(--font-ui);
@@ -736,55 +739,71 @@ Přijď se podívat na naši zkoušku nebo nás kontaktuj – rádi tě uvidíme
         </p>
       </div>
       <div class="concert-list">
+
         <div class="concert-item reveal">
           <div class="concert-date-box">
-            <span class="cdate-month">Prosinec</span>
-            <span class="cdate-day">14</span>
-          </div>
-          <div class="concert-info">
-            <div class="concert-title">Adventní koncert</div>
-            <div class="concert-venue">Kostel sv. Vojtěcha · Opava</div>
-            <p class="concert-desc">Tradiční adventní program s duchovní a vánočními skladbami. Svátečná atmosféra v historickém prostoru.</p>
-          </div>
-        </div>
-        <div class="concert-item reveal reveal-delay-1">
-          <div class="concert-date-box">
-            <span class="cdate-month">Říjen</span>
-            <span class="cdate-day">5</span>
-          </div>
-          <div class="concert-info">
-            <div class="concert-title">Společný koncert s PSSÚ</div>
-            <div class="concert-venue">Dům kultury · Opava</div>
-            <p class="concert-desc">Jubilejní společný večer s Pěveckým sdružením slezských učitelek – setkání dvou sborových generací.</p>
-          </div>
-        </div>
-        <div class="concert-item reveal reveal-delay-2">
-          <div class="concert-date-box">
             <span class="cdate-month">Květen</span>
-            <span class="cdate-day">23</span>
+            <span class="cdate-day">9</span>
           </div>
           <div class="concert-info">
-            <div class="concert-title">Sborový festival Slezská píseň</div>
-            <div class="concert-venue">Hláska · Opava</div>
-            <p class="concert-desc">Regionální přehlídka sborového zpěvu s účastí souborů z celého kraje.</p>
+            <div class="concert-title">Slovíkovy děti</div>
+            <div class="concert-venue">Kostel sv. Václava · Opava</div>
+            <p class="concert-desc">Koncert k oslavě jubilea sbormistra Jiřího Slovíka.</p>
           </div>
         </div>
-        <div class="concert-item reveal reveal-delay-3">
-          <div class="concert-date-box">
-            <span class="cdate-month">Březen</span>
-            <span class="cdate-day">8</span>
+
+        <div class="concert-item concert-item--blank reveal reveal-delay-1">
+          <div class="concert-date-box concert-date-box--blank">
+            <span class="cdate-month">—</span>
+            <span class="cdate-day">?</span>
           </div>
           <div class="concert-info">
-            <div class="concert-title">Jarní koncert</div>
-            <div class="concert-venue">Minoritský klášter · Opava</div>
-            <p class="concert-desc">Programový večer s renesančními a barokními díly doplněný soudobými sborovými skladbami.</p>
+            <div class="concert-title">Připravujeme</div>
+            <div class="concert-venue">Sledujte naše sociální sítě</div>
+            <p class="concert-desc">Termín a místo budou brzy upřesněny.</p>
           </div>
         </div>
+
+        <div class="concert-item concert-item--blank reveal reveal-delay-2">
+          <div class="concert-date-box concert-date-box--blank">
+            <span class="cdate-month">—</span>
+            <span class="cdate-day">?</span>
+          </div>
+          <div class="concert-info">
+            <div class="concert-title">Připravujeme</div>
+            <div class="concert-venue">Sledujte naše sociální sítě</div>
+            <p class="concert-desc">Termín a místo budou brzy upřesněny.</p>
+          </div>
+        </div>
+
+        <div class="concert-item concert-item--blank reveal reveal-delay-3">
+          <div class="concert-date-box concert-date-box--blank">
+            <span class="cdate-month">—</span>
+            <span class="cdate-day">?</span>
+          </div>
+          <div class="concert-info">
+            <div class="concert-title">Připravujeme</div>
+            <div class="concert-venue">Sledujte naše sociální sítě</div>
+            <p class="concert-desc">Termín a místo budou brzy upřesněny.</p>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 </section>
 
+<style>
+.concert-item--blank {
+  opacity: 0.4;
+  filter: grayscale(1);
+}
+
+.concert-date-box--blank .cdate-day,
+.concert-date-box--blank .cdate-month {
+  color: var(--muted, #888);
+}
+</style>
 <!-- SBORMISTR -->
 <section id="sbormistr">
   <div class="sbormistr-inner">
@@ -854,10 +873,20 @@ Přijď se podívat na naši zkoušku nebo nás kontaktuj – rádi tě uvidíme
       <div class="contact-block reveal reveal-delay-1">
         <div class="contact-label">Sociální sítě</div>
         <div class="contact-social">
-<a href="https://www.facebook.com/p/Luscinia-Magna-61569302033475/" target="_blank" rel="noopener" class="social-link">Facebook</a>
-      <div class="contact-block reveal reveal-delay-4">
+          <a href="https://www.facebook.com/p/Luscinia-Magna-61569302033475/" target="_blank" rel="noopener" class="social-link">Facebook</a>
+        </div>
       </div>
+
+      <div class="contact-block reveal reveal-delay-2">
+        <div class="contact-label">Telefon</div>
+        <a href="tel:+420607112383" class="contact-link">+420 607 112 383</a>
       </div>
+
+      <div class="contact-block reveal reveal-delay-3">
+        <div class="contact-label">E-mail</div>
+        <a href="mailto:lusciniamagnaopava@gmail.com" class="contact-link">lusciniamagnaopava@gmail.com</a>
+      </div>
+
     </div>
   </div>
 </section>
